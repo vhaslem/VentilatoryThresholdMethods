@@ -10,6 +10,7 @@ def test_strucModel(N, sigma, alpha, n, scale):
     acc_values['pred y'] = []
     acc_values['exp ci'] =[]
     acc_values['vslope ci'] =[]
+    acc_values['struc ci'] =[]
     stat_values = {}
     stat_values['struc'] = []
     stat_values['exp'] =[]
@@ -19,6 +20,9 @@ def test_strucModel(N, sigma, alpha, n, scale):
     x_values['Strucchange'] = []
     x_values['VSlope Method'] = []
     x_values['Hodgin-Haslem'] = []
+    # confidence intervals
+    confidence_intervals = {}
+    
     breaks = np.random.uniform(.25 * scale, .75 * scale, size=N)
     
     for i in range(N):
@@ -62,19 +66,25 @@ def test_strucModel(N, sigma, alpha, n, scale):
         acc_values['pred y'].append(pred)
         acc_values['exp ci'].append((exp_model_pi[1], exp_model_pi[2]))
         acc_values['vslope ci'].append((v_model_pi[1], v_model_pi[2]))
+        acc_values['struc ci'].append((struc_model_pi[1], struc_model_pi[2]))
 
         x_values['break'].append(break_est)
         x_values['Strucchange'].append(bp_guess)
         x_values['VSlope Method'].append(v_model_pred)
         x_values['Hodgin-Haslem'].append(exp_model_pred)
     
-    return stat_values, acc_values, x_values
+    confidence_intervals['Hodgin-Haslem'] = sum([(acc_vals[1] - acc_vals[0])/2 for acc_vals in acc_values['exp ci']])/len(acc_values['exp ci'])
+    
+    confidence_intervals['VSlope Method'] = sum([(acc_vals[1] - acc_vals[0])/2 for acc_vals in acc_values['vslope ci']])/len(acc_values['vslope ci'])
+    confidence_intervals['Strucchange'] = sum([(acc_vals[1] - acc_vals[0])/2 for acc_vals in acc_values['struc ci']])/len(acc_values['struc ci'])
+    return stat_values, acc_values, x_values, confidence_intervals
 
 def test_vslopeModel(N, sigma, alpha, n, scale):
     acc_values = {}
     acc_values['pred y'] = []
     acc_values['exp ci'] =[]
     acc_values['struc ci'] =[]
+    acc_values['vslope ci'] = []
     stat_values = {}
     stat_values['struc'] = []
     stat_values['exp'] =[]
@@ -84,6 +94,11 @@ def test_vslopeModel(N, sigma, alpha, n, scale):
     x_values['Strucchange'] = []
     x_values['VSlope Method'] = []
     x_values['Hodgin-Haslem'] = []
+    # confidence intervals
+    confidence_intervals = {}
+    confidence_intervals['Strucchange'] = []
+    confidence_intervals['VSlope Method'] = []
+    confidence_intervals['Hodgin-Haslem'] = []
     breaks = np.random.uniform(.25 * scale, .75 * scale, size=N)
     for i in range(N):
 
@@ -129,19 +144,25 @@ def test_vslopeModel(N, sigma, alpha, n, scale):
         acc_values['pred y'].append(pred)
         acc_values['exp ci'].append((exp_model_pi[1], exp_model_pi[2]))
         acc_values['struc ci'].append((struc_model_pi[1], struc_model_pi[2]))
+        acc_values['vslope ci'].append((v_model_pi[1], v_model_pi[2]))
 
         x_values['break'].append(break_est)
         x_values['Strucchange'].append(bp_guess)
         x_values['VSlope Method'].append(v_model_pred)
         x_values['Hodgin-Haslem'].append(exp_model_pred)
-
-    return stat_values, acc_values, x_values
+    
+    confidence_intervals['Hodgin-Haslem'] = sum([(acc_vals[1] - acc_vals[0])/2 for acc_vals in acc_values['exp ci']])/len(acc_values['exp ci'])
+    
+    confidence_intervals['VSlope Method'] = sum([(acc_vals[1] - acc_vals[0])/2 for acc_vals in acc_values['vslope ci']])/len(acc_values['vslope ci'])
+    confidence_intervals['Strucchange'] = sum([(acc_vals[1] - acc_vals[0])/2 for acc_vals in acc_values['struc ci']])/len(acc_values['struc ci'])
+    return stat_values, acc_values, x_values, confidence_intervals
 
 def test_expModel(N, sigma, alpha, n, scale):
     acc_values = {}
     acc_values['pred y'] = []
     acc_values['vslope ci'] =[]
     acc_values['struc ci'] =[]
+    acc_values['exp ci'] = []
     stat_values = {}
     stat_values['struc'] = []
     stat_values['exp'] =[]
@@ -152,6 +173,11 @@ def test_expModel(N, sigma, alpha, n, scale):
     x_values['Strucchange'] = []
     x_values['VSlope Method'] = []
     x_values['Hodgin-Haslem'] = []
+    # confidence intervals
+    confidence_intervals = {}
+    confidence_intervals['Strucchange'] = []
+    confidence_intervals['VSlope Method'] = []
+    confidence_intervals['Hodgin-Haslem'] = []
     breaks = np.random.uniform(.25 * scale, .75 * scale, size=N)
     for i in range(N):
 
@@ -191,16 +217,20 @@ def test_expModel(N, sigma, alpha, n, scale):
 
         # calculate accuracy
         acc_values['pred y'].append(pred)
-        acc_values['vslope ci'].append((exp_model_pi[1], exp_model_pi[2]))
+        acc_values['vslope ci'].append((v_model_pi[1], v_model_pi[2]))
         acc_values['struc ci'].append((struc_model_pi[1], struc_model_pi[2]))
+        acc_values['exp ci'].append((exp_model_pi[1], exp_model_pi[2]))
         # calculate difference of x values:
         x_values['break'].append(break_est)
         x_values['Strucchange'].append(bp_guess)
         x_values['VSlope Method'].append(v_model_pred)
         x_values['Hodgin-Haslem'].append(exp_model_pred)
-
-
-    return stat_values, acc_values, x_values
+        
+    confidence_intervals['Hodgin-Haslem'] = sum([(acc_vals[1] - acc_vals[0])/2 for acc_vals in acc_values['exp ci']])/len(acc_values['exp ci'])
+    
+    confidence_intervals['VSlope Method'] = sum([(acc_vals[1] - acc_vals[0])/2 for acc_vals in acc_values['vslope ci']])/len(acc_values['vslope ci'])
+    confidence_intervals['Strucchange'] = sum([(acc_vals[1] - acc_vals[0])/2 for acc_vals in acc_values['struc ci']])/len(acc_values['struc ci'])
+    return stat_values, acc_values, x_values, confidence_intervals
 
 def compute_accuracy(acc_dict, model_names, N):
     for (pred_model, ci_model) in model_names:
@@ -282,25 +312,34 @@ def make_fig_scatter(x_vals_dict, test_data, sigma):
     plt.savefig(f"color_coded_differences_{test_data}.png", dpi=300, bbox_inches='tight')
     plt.close()
 
-    
+def compute_mean_squared_error(model_vals, model_name, sigma, ci_dict):
+    ref_key = list(model_vals.keys())[0]
+    ref_values = model_vals[ref_key]
+    for key in model_vals.keys():
+        if key != 'break':
+            mse = sum([(model_val- break_val)**2 for model_val, break_val in zip(model_vals[key], ref_values)])/len(model_vals[key])
+            print(f'Given sigma = {sigma} and test model {model_name}, mse for {key} was {mse} with conf plus minus {ci_dict[key]}')
+
 # NOTE: n is currently set to 100 for values
-def main(N = 1000, sigma = .5, alpha = 0.05, n = 150, scale = 6):
+def main(N = 1000, sigma = 5, alpha = 0.05, n = 150, scale = 6):
     
     # test strucModel
-    struc_stats, struc_accuracy, StrucModelGeneration = test_strucModel(N = N, sigma = sigma, alpha = alpha, n= n, scale = scale)
-    vslope_stats, vslope_accuracy, VSlopeGeneration = test_vslopeModel(N = N, sigma = sigma, alpha = alpha, n= n, scale = scale)
-    exp_stats, exp_accuracy, ExponentialGeneration = test_expModel(N = N, sigma = sigma, alpha = alpha, n= n, scale = scale)
-    for dicts in [(StrucModelGeneration, 'Strucchange Data'), (VSlopeGeneration, 'VSlope Data'), (ExponentialGeneration, 'Exponential Data')]:
-        make_fig(dicts[0], dicts[1], sigma)
-    for dicts in [(StrucModelGeneration, 'Strucchange Data'), (VSlopeGeneration, 'VSlope Data'), (ExponentialGeneration, 'Exponential Data')]:
-        make_fig_scatter(dicts[0], dicts[1], sigma)
+    struc_stats, struc_accuracy, StrucModelGeneration, struc_cis = test_strucModel(N = N, sigma = sigma, alpha = alpha, n= n, scale = scale)
+    vslope_stats, vslope_accuracy, VSlopeGeneration, vslope_cis = test_vslopeModel(N = N, sigma = sigma, alpha = alpha, n= n, scale = scale)
+    exp_stats, exp_accuracy, ExponentialGeneration, exp_cis = test_expModel(N = N, sigma = sigma, alpha = alpha, n= n, scale = scale)
+    # for dicts in [(StrucModelGeneration, 'Strucchange Data'), (VSlopeGeneration, 'VSlope Data'), (ExponentialGeneration, 'Exponential Data')]:
+    #     make_fig(dicts[0], dicts[1], sigma)
+    # for dicts in [(StrucModelGeneration, 'Strucchange Data'), (VSlopeGeneration, 'VSlope Data'), (ExponentialGeneration, 'Exponential Data')]:
+    #     make_fig_scatter(dicts[0], dicts[1], sigma)
 
     # compute accuracy for each:
-    print(f'N = {N}, n = {n}, sigma = {sigma}, alpha = {alpha}')
-    compute_accuracy(struc_accuracy, [('struc','exp'), ('struc','vslope')], N)
-    compute_accuracy(vslope_accuracy, [('vslope','exp'), ('vslope','struc')], N)
-    compute_accuracy(exp_accuracy, [('exp','vslope'), ('exp','struc')], N)
+    # print(f'N = {N}, n = {n}, sigma = {sigma}, alpha = {alpha}')
+    # compute_accuracy(struc_accuracy, [('struc','exp'), ('struc','vslope')], N)
+    # compute_accuracy(vslope_accuracy, [('vslope','exp'), ('vslope','struc')], N)
+    # compute_accuracy(exp_accuracy, [('exp','vslope'), ('exp','struc')], N)
 
+    for dicts in [(StrucModelGeneration, 'Strucchange', struc_cis), (VSlopeGeneration, 'VSlope Method', vslope_cis), (ExponentialGeneration, 'Hodgin-Haslem', exp_cis)]:
+        compute_mean_squared_error(dicts[0], dicts[1], sigma, dicts[2])
     
 
 

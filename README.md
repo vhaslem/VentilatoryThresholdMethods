@@ -12,3 +12,7 @@ $\sigma$ - standard deviation from generated model
 $\alpha$ - statistical significance threshold.
 
 Initial findings show for low $\sigma$, Hodgin-Haslem produces a wider band of predictions that do encompass the true value, while VSlope underpredicts and strucchange stays accurate. However, as $\sigma$ is increased, both VSlope and strucchange begin to diverge from the breakpoint while Hodgin-Haslem stays fairly accurate.
+
+
+4-17-2026 UPDATE:
+Findings ultimately suggest through error analysis and stability analysis that the novel method isn't preferable over VSlope or Strucchange, which prove to be more robust and more precise when done computationally. Comparison between our method and "laboratory" VSlope still needs to be implemented. However, the novelty of statistical analysis on these methods warrants further research and a deeper dive into tuning VT methods to achieve bettter results.
